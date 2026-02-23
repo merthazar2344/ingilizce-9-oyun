@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>İngilizce 9 İlk 4 Ünite</title>
+<style>
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+margin:0;
+padding:0;
+}
+#startScreen,#gameScreen{
+padding:20px;
+}
+button{
+padding:15px;
+margin:10px;
+font-size:18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+.option{
+width:40%;
+display:inline-block;
+}
+.correct{background:green!important;}
+.wrong{background:red!important;}
+#topBar{
+display:flex;
+justify-content:space-between;
+padding:10px;
+font-size:20px;
+}
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+<h1>İngilizce 9 İlk 4 Ünite</h1>
+<button onclick="startGame(60)">60 Saniye</button>
+<button onclick="startGame(90)">90 Saniye</button>
+<button onclick="startGame(120)">120 Saniye</button>
+</div>
+
+<div id="gameScreen" style="display:none;">
+<div id="topBar">
+<div id="timer">Süre: 0</div>
+<div id="score">Skor: 0</div>
+</div>
+
+<h2 id="word"></h2>
+
+<div>
+<button class="option" id="b1"></button>
+<button class="option" id="b2"></button><br>
+<button class="option" id="b3"></button>
+<button class="option" id="b4"></button>
+</div>
+
+<h3 id="info"></h3>
+</div>
+
+<script>
+
+let words = [
+{q:"teacher",a:"öğretmen"},
+{q:"student",a:"öğrenci"},
+{q:"classroom",a:"sınıf"},
+{q:"board",a:"tahta"},
+{q:"desk",a:"sıra"},
+{q:"homework",a:"ödev"},
+{q:"exam",a:"sınav"},
+{q:"project",a:"proje"},
+{q:"library",a:"kütüphane"},
+{q:"principal",a:"müdür"},
+{q:"friend",a:"arkadaş"},
+{q:"tall",a:"uzun"},
+{q:"short",a:"kısa"},
+{q:"beautiful",a:"güzel"},
+{q:"handsome",a:"yakışıklı"},
+{q:"happy",a:"mutlu"},
+{q:"angry",a:"sinirli"},
+{q:"mother",a:"anne"},
+{q:"father",a:"baba"},
+{q:"sister",a:"kız kardeş"},
+{q:"brother",a:"erkek kardeş"},
+{q:"grandmother",a:"büyükanne"},
+{q:"grandfather",a:"büyükbaba"},
+{q:"cousin",a:"kuzen"},
+{q:"notebook",a:"defter"},
+{q:"pen",a:"kalem"},
+{q:"pencil",a:"kurşun kalem"},
+{q:"eraser",a:"silgi"},
+{q:"bag",a:"çanta"},
+{q:"uniform",a:"okul forması"}
+];
+
+let time=0;
+let score=0;
+let timerInterval;
+
+function startGame(t){
+time=t;
+score=0;
+document.getElementById("startScreen").style.display="none";
+document.getElementById("gameScreen").style.display="block";
+updateUI();
+newQuestion();
+timerInterval=setInterval(()=>{
+time--;
+updateUI();
+if(time<=0){
+clearInterval(timerInterval);
+alert("Oyun bitti! Skor: "+score);
+location.reload();
+}
+},1000);
+}
+
+function updateUI(){
+document.getElementById("timer").innerText="Süre: "+time;
+document.getElementById("score").innerText="Skor: "+score;
+}
+
+function newQuestion(){
+let q=words[Math.floor(Math.random()*words.length)];
+document.getElementById("word").innerText=q.q;
+
+let correct=q.a;
+let options=[correct];
+
+while(options.length<4){
+let random=words[Math.floor(Math.random()*words.length)].a;
+if(!options.includes(random)) options.push(random);
+}
+
+options.sort(()=>Math.random()-0.5);
+
+for(let i=1;i<=4;i++){
+let btn=document.getElementById("b"+i);
+btn.innerText=options[i-1];
+btn.className="option";
+btn.onclick=function(){
+if(btn.innerText===correct){
+btn.classList.add("correct");
+score+=10;
+}else{
+btn.classList.add("wrong");
+score-=1;
+}
+updateUI();
+setTimeout(newQuestion,500);
+};
+}
+}
+
+</script>
+
+</body>
+</html>
